@@ -1,0 +1,21 @@
+apiVersion: 1
+
+deleteDatasources:
+  - name: WS-Influx
+    orgId: 1
+
+datasources:
+  - name: WS-Influx
+    orgId: 1
+    type: influxdb
+    access: proxy
+    url: http://database:8086
+    isDefault: true
+    editable: true
+    jsonData: 
+      version: Flux
+      defaultBucket: ws-bucket
+      organization: ws-org
+    secureJsonData:
+      token: ws-super-secret-auth-token
+    

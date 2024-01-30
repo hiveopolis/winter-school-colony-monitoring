@@ -1,0 +1,52 @@
+version: '3'
+
+volumes:
+  db-data:
+  db-config:
+  ui-data:
+
+services:
+  broker:
+    image: eclipse-mosquitto:2.0
+    command: mosquitto -c /mosquitto-no-auth.conf
+    ports:
+      - 0.0.0.0:1883:1883
+  
+  database:
+    image: influxdb:2.7
+    ports:
+      - 0.0.0.0:8086:8086
+    environment:
+      # NB! for demonstration purposes only
+      # in production use proper credential management (e.g inject via .env or perform manual setup)
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ws-user
+      DOCKER_INFLUXDB_INIT_PASSWORD: ws-password
+      DOCKER_INFLUXDB_INIT_ORG: ws-org
+      DOCKER_INFLUXDB_INIT_BUCKET: ws-bucket
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ws-super-secret-auth-token
+      # -----
+    volumes:
+      - db-data:/var/lib/influxdb2
+      - db-config:/etc/influxdb2
+
+  archiver:
+    build: ./archiver
+
+  ui:
+    image: grafana/grafana-oss:10.3.1
+    ports:
+      - 0.0.0.0:3000:3000
+    environment:
+      # NB! for demonstration purposes only
+      GF_SECURITY_ADMIN_USER: ws-user
+      GF_SECURITY_ADMIN_PASSWORD: ws-password
+      # -----
+    volumes:
+      - ui-data:/var/lib/grafana
+      - ./ui/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
+    profiles:
+      - disabled
+    
+  
+
