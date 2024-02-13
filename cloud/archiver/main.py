@@ -2,6 +2,7 @@ import logging
 logging.basicConfig(format="%(asctime)s\t%(levelname)s\t%(message)s", level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
 
 from paho.mqtt.client import Client, MQTTMessage
+from paho.mqtt.enums import CallbackAPIVersion
 
 from influxdb_client import InfluxDBClient, Point, WriteApi
 
@@ -9,7 +10,7 @@ from influxdb_client import InfluxDBClient, Point, WriteApi
 def main():  
   logging.info("Archiver started")
 
-  mqtt = Client()
+  mqtt = Client(CallbackAPIVersion.VERSION2)
   mqtt.on_connect = mqtt_connected
   mqtt.on_message = handle_message
 
@@ -21,7 +22,7 @@ def main():
   mqtt.loop_forever()
 
 
-def mqtt_connected(client: Client, userdata, flags, rc):
+def mqtt_connected(client: Client, userdata, flags, rc, props):
   """ 
   This function is executed when the client tries to connect to MQTT broker.
   """
