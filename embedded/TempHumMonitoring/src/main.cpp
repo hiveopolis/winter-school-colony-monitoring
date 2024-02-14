@@ -4,7 +4,7 @@
 #include <WiFiClient.h>
 #include <PubSubClient.h>
 
-// Consants for sensor pin and type
+// Constants for sensor pin and type
 #define DHT_PIN 21
 #define DHT_TYPE DHT22
 
