@@ -16,7 +16,7 @@ const char SSID[] = "<CHANGE THIS>";
 const char PASSWD[] = "<CHANGE THIS>";
 
 // MQTT broker details
-const char BROKER[] = "192.168.2.225";
+const char BROKER[] = "192.168.x.y";
 const uint16_t BROKER_PORT = 1883;
 
 const char TEMP_TOPIC[] = "ws/" CLIENT_ID "/temp";
@@ -54,7 +54,7 @@ void setup()
 
 void loop()
 {
-  // Send data every INTERVAL_MS
+  // Send data every INTERVAL_S
   if (millis() - prevTime > INTERVAL_S * 1000)
   {
     float temperature = dhtSensor.readTemperature();
@@ -62,9 +62,7 @@ void loop()
     // If one of the readings is not a number, discard the data
     if (!(isnan(temperature) || isnan(humidity)))
     {
-      // Print the data for debug reasons
       printData(temperature, humidity);
-      // Send data only if both connections are successful
       if (connectWifi() && connectMqtt())
       {
         Serial.println("Sending data");
